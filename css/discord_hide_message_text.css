@@ -1,0 +1,36 @@
+.messageContent_f9f2ca, .list_a478e5 {
+    filter: blur(4px);
+    opacity: 0.0;
+    user-select:none !important;
+}
+
+.messageContent_f9f2ca:hover {
+    opacity: 0.5;
+}
+
+.messageContent_f9f2ca span a {
+    filter: unset !important;
+    opacity: 1 !important;
+}
+
+.avatar_f9f2ca, .replyAvatar_f9f2ca, .avatar_f94206, .banner_c3e427, .reaction_ec6b19, .pronounsText_c32acf, .descriptionClamp_fc5c48, .username_f9f2ca, .typing_d7ebeb, .emojiContainer_bae8cb, .clickableSticker_a1debe, .roleIcon_d5100b, .embedDescription_b0068a, .avatarDecoration_f9f2ca, .link_c91bad, .peopleColumn_c2739c, .nowPlayingColumn_c2739c, .toolbar_fc4f04, .upperContainer_fc4f04  {
+	display:none;
+}
+
+/* Message text input */
+.channelBottomBarArea_a7d72e {
+	display:none;
+}
+
+.memberInner_a31c43 {
+  display:none;
+}
+
+.listItem_c96c45 {
+	opacity:0;
+}
+
+ul ul .listItem_c96c45 {
+    opacity: 1 !important;
+}
+
