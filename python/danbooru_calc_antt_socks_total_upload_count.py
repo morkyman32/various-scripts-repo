@@ -19,7 +19,7 @@ while (len(response) == 20 or page_cnt==1):
         with open("output.txt", "a") as f:
             f.write('a[data-user-id="'+str(item['user_id'])+'"]:after, ')
 
-exit()
+# exit()
 uploads_count=0
 deletes_count=0
 
