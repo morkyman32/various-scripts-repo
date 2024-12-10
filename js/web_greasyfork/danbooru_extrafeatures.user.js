@@ -285,6 +285,21 @@
         })
     })
 
+    if(/\/uploads([^/]*)$/.test(window.location.href)) {
+        console.log("hi");
+        document.querySelector("form").outerHTML+=`<button class="ui-button" id="click-url-log-custombutton">Click URL log</button>`;
+        document.querySelector("#click-url-log-custombutton").onclick=function() {
+            var clicked_assets_urls=""
+            document.querySelectorAll(".media-asset-preview a").forEach(item => {
+                item.addEventListener("click",function(e) {
+                    e.preventDefault();
+                    if(!clicked_assets_urls.includes(this.href)) clicked_assets_urls+=this.href+"\n"
+                    console.log(clicked_assets_urls)
+                })
+            })
+        }
+    }
+
     if(/\/uploads\/(.*)(\d+)$/.test(window.location.href)) {
 
         function prevent_posting() {
@@ -1262,7 +1277,7 @@ danbooruは多い大切な規約がいます。すべての規約は英語に書
 
         };
 
-    
+
 
     // favorite groups sort alphabetically by default
         var myelem=Array.from(document.querySelectorAll('th')).find(item => item.innerHTML == 'Favorite Groups').parentElement.querySelector("td a")
