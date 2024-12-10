@@ -10,6 +10,22 @@
 // @run-at        document-start
 // ==/UserScript==
 
+//   _____   ____  _   _ _______   _______ _    _ _____  _   _    ____  ______ ______
+//  |  __ \ / __ \| \ | |__   __| |__   __| |  | |  __ \| \ | |  / __ \|  ____|  ____|
+//  | |  | | |  | |  \| |  | |       | |  | |  | | |__) |  \| | | |  | | |__  | |__
+//  | |  | | |  | | . ` |  | |       | |  | |  | |  _  /| . ` | | |  | |  __| |  __|
+//  | |__| | |__| | |\  |  | |       | |  | |__| | | \ \| |\  | | |__| | |    | |
+//  |_____/ \____/|_| \_|  |_|       |_|   \____/|_|  \_\_| \_|  \____/|_|    |_|
+//
+//   _____  _      ______           _____ ______   _______       _  ________    _____          _____  ______
+//  |  __ \| |    |  ____|   /\    / ____|  ____| |__   __|/\   | |/ /  ____|  / ____|   /\   |  __ \|  ____|
+//  | |__) | |    | |__     /  \  | (___ | |__       | |  /  \  | ' /| |__    | |       /  \  | |__) | |__
+//  |  ___/| |    |  __|   / /\ \  \___ \|  __|      | | / /\ \ |  < |  __|   | |      / /\ \ |  _  /|  __|
+//  | |    | |____| |____ / ____ \ ____) | |____     | |/ ____ \| . \| |____  | |____ / ____ \| | \ \| |____
+//  |_|    |______|______/_/    \_\_____/|______|    |_/_/    \_\_|\_\______|  \_____/_/    \_\_|  \_\______|
+
+
+
 (function() {
     'use strict';
 
@@ -22,11 +38,11 @@
 
     var hosts_to_block=[
         // Anime, manga, hentai community and forum sites
-        "danbooru.donmai.us",
-        "safebooru.donmai.us",
-        "sonohara.donmai.us",
-        "testbooru.donmai.us",
-        "cdn.donmai.us",
+        // "danbooru.donmai.us",
+        // "safebooru.donmai.us",
+        // "sonohara.donmai.us",
+        // "testbooru.donmai.us",
+        // "cdn.donmai.us",
         "mdpakk.github.io/internet-start-page/hubs/danbooru/index.html",
         "baramangaonline.com",
         "gelbooru.com",
@@ -162,6 +178,86 @@
         "vk.com",
         "twitch.tv",
     ]
+
+    if(window.location.host.endsWith(".donmai.us")) {
+        GM_addStyle(`
+
+/* This hides all usernames on Danbooru by replacing the username with a block that has the color of the user's rank */
+
+/*.user-contributor, .user-approver, .user-builder, .user-member, .user-admin, .user-owner, .user-gold, .user-platinum, .user-moderator, .user-restricted,*/
+.user:not(.user[data-user-id="1211591"]) {
+    width:16px;
+    height:16px;
+    display:block;
+    padding-left: 16px;
+    border-radius: 5px;
+    overflow:hidden;
+    color: rgba(0, 0, 0, 0) !important;
+    text-shadow: 0 0 0 rgba(0,0,0,0);
+    user-select: none;
+    pointer-events: none;
+}
+
+#post-info-approver a, .updated-column a {
+    user-select: none;
+    pointer-events: none;
+}
+
+.user-contributor:not(.user[data-user-id="1211591"]) {
+    background-color: var(--user-contributor-color);
+}
+
+.user-approver:not(.user[data-user-id="1211591"]) {
+    background-color: var(--user-approver-color);
+}
+
+.user-builder:not(.user[data-user-id="1211591"]) {
+    background-color: var(--user-builder-color);
+}
+
+.user-member:not(.user[data-user-id="1211591"]), .user-restricted:not(.user[data-user-id="1211591"]) {
+    background-color: var(--user-member-color);
+}
+
+.user-admin, .user-owner {
+    background-color: var(--user-admin-color);
+}
+
+.user-gold {
+    background-color: var(--user-gold-color);
+}
+
+.user-platinum {
+    background-color: var(--user-platinum-color);
+}
+
+.user-moderator {
+    background-color: var(--user-moderator-color);
+}
+
+#news-updates, #a-site-map, #c-user-name-change-requests, #c-user-feedbacks, #c-bans, .comment, #delete-account, span.post-favcount, li#post-info-uploader:has(a.user:not(a.user[data-user-id="1211591"])), span.post-votes.inline-flex.gap-1, li#post-info-score, li#post-info-favorites, .post-tooltip-header .user:not(.user[data-user-id="1211591"]), .user-tooltip, #post-events-table, #post-history-moderation, li#post-info-approver .user, #post-info-approver, #post-info-status, .post-notice-pending {
+    display:none !important;
+}
+
+.post-preview.post-status-pending:not(.mod-queue-preview) .post-preview-image {
+	border-color:transparent !important;
+}
+
+li#post-info-approver:after {
+    content: "Someone";
+}
+
+body[data-forum-topic-id="7934"] .list-of-forum-posts,
+tr#forum-topic-7934 {
+    display:none !important;
+}
+
+article.message:has(.author *[data-user-level="20"]) {
+    display:none !important;
+}
+
+        `);
+    }
 
     if(window.location.host=="www.youtube.com" || window.location.host=="m.youtube.com") {
         if(window.location.href.includes("youtube.com/shorts")) {
