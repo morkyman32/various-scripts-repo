@@ -287,14 +287,18 @@
 
     if(/\/uploads([^/]*)$/.test(window.location.href)) {
         console.log("hi");
-        document.querySelector("form").outerHTML+=`<button class="ui-button" id="click-url-log-custombutton">Click URL log</button>`;
+        var clickurllogcustom_clicked=false;
+      document.querySelector("form").outerHTML+=`<pre id="pre_clicked_assets_urls"></pre><button class="ui-button" id="click-url-log-custombutton">Click URL log</button>`;
         document.querySelector("#click-url-log-custombutton").onclick=function() {
+            if(clickurllogcustom_clicked) return 0;
+            clickurllogcustom_clicked=true;
             var clicked_assets_urls=""
             document.querySelectorAll(".media-asset-preview a").forEach(item => {
                 item.addEventListener("click",function(e) {
                     e.preventDefault();
                     if(!clicked_assets_urls.includes(this.href)) clicked_assets_urls+=this.href+"\n"
                     console.log(clicked_assets_urls)
+                    document.querySelector("#pre_clicked_assets_urls").innerHTML=clicked_assets_urls;
                 })
             })
         }
