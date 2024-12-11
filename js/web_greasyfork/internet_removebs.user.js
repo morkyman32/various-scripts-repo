@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Internet - Disable bullshit
+// @name         Internet - Disable bs
 // @namespace    http://tampermonkey.net/
 // @version      2024-11-02
 // @description  try to take over the world!
@@ -38,11 +38,11 @@
 
     var hosts_to_block=[
         // Anime, manga, hentai community and forum sites
-        // "danbooru.donmai.us",
-        // "safebooru.donmai.us",
-        // "sonohara.donmai.us",
-        // "testbooru.donmai.us",
-        // "cdn.donmai.us",
+        "danbooru.donmai.us",
+        "safebooru.donmai.us",
+        "sonohara.donmai.us",
+        "testbooru.donmai.us",
+        "cdn.donmai.us",
         "mdpakk.github.io/internet-start-page/hubs/danbooru/index.html",
         "baramangaonline.com",
         "gelbooru.com",
@@ -125,6 +125,7 @@
         "wikia.com",
 
         // Porn sites
+        "onlyfans.com",
         "theporndude.com",
         "pornhub.com",
         "xvideos.com",
@@ -149,7 +150,7 @@
 
         // Gay porn sites
         "lpsg.com",
-        "gaybooru.app",
+        // "gaybooru.app",
         "mygaysites.com",
         "fairytalepolicehoedepartment.com",
         "boyfriendtv.com",
@@ -180,12 +181,36 @@
     ]
 
     if(window.location.host.endsWith(".donmai.us")) {
+
+        document.addEventListener("DOMContentLoaded", (event) => {
+            var element_list=document.querySelectorAll("#tags");
+            element_list.forEach(elem=> {
+                elem.addEventListener("input", (event) => {
+                    if(elem.value.includes("user:") || elem.value.includes("approver:") || elem.value.includes("score:") ) {
+                        elem.value="";
+                    }
+                });
+            })
+        });
+
+        var ok_userids=["1211591","621501","1199319","1156029","200729","1109238","1160833","998846","1147878","1153426","723815","932543","623497","799272","1197250","1045712","798571"];
+        ok_userids=["1211591"];
+        var css_ok_user_selector=[];
+        var css_ok_uploader_selector=[]
+        ok_userids.forEach(userid=> {
+            css_ok_user_selector.push(`.user[data-user-id="${userid}"]`);
+            css_ok_uploader_selector.push(`*[data-uploader-id="${userid}"]`);
+        })
+        css_ok_user_selector=css_ok_user_selector.join(",");
+        css_ok_uploader_selector=css_ok_uploader_selector.join(",");
+        console.log(css_ok_user_selector)
+
         GM_addStyle(`
 
 /* This hides all usernames on Danbooru by replacing the username with a block that has the color of the user's rank */
 
 /*.user-contributor, .user-approver, .user-builder, .user-member, .user-admin, .user-owner, .user-gold, .user-platinum, .user-moderator, .user-restricted,*/
-.user:not(.user[data-user-id="1211591"]) {
+.user:not(${css_ok_user_selector}) {
     width:16px;
     height:16px;
     display:block;
@@ -203,19 +228,19 @@
     pointer-events: none;
 }
 
-.user-contributor:not(.user[data-user-id="1211591"]) {
+.user-contributor {
     background-color: var(--user-contributor-color);
 }
 
-.user-approver:not(.user[data-user-id="1211591"]) {
+.user-approver {
     background-color: var(--user-approver-color);
 }
 
-.user-builder:not(.user[data-user-id="1211591"]) {
+.user-builder {
     background-color: var(--user-builder-color);
 }
 
-.user-member:not(.user[data-user-id="1211591"]), .user-restricted:not(.user[data-user-id="1211591"]) {
+.user-member, .user-restricted {
     background-color: var(--user-member-color);
 }
 
@@ -235,7 +260,11 @@
     background-color: var(--user-moderator-color);
 }
 
-#news-updates, #a-site-map, #c-user-name-change-requests, #c-user-feedbacks, #c-bans, .comment, #delete-account, span.post-favcount, li#post-info-uploader:has(a.user:not(a.user[data-user-id="1211591"])), span.post-votes.inline-flex.gap-1, li#post-info-score, li#post-info-favorites, .post-tooltip-header .user:not(.user[data-user-id="1211591"]), .user-tooltip, #post-events-table, #post-history-moderation, li#post-info-approver .user, #post-info-approver, #post-info-status, .post-notice-pending {
+${css_ok_user_selector} {
+    background-color:unset;
+}
+
+#news-updates, #a-site-map, #c-user-name-change-requests, #c-user-feedbacks, #c-bans, .comment, #delete-account, span.post-favcount, li#post-info-uploader:has(a.user:not(${css_ok_user_selector})), span.post-votes.inline-flex.gap-1, li#post-info-score, li#post-info-favorites, .post-tooltip-header .user:not(${css_ok_user_selector}), .user-tooltip, #post-events-table, #post-history-moderation, li#post-info-approver .user, #post-info-approver, #post-info-status, .post-notice-pending {
     display:none !important;
 }
 
@@ -252,8 +281,37 @@ tr#forum-topic-7934 {
     display:none !important;
 }
 
-article.message:has(.author *[data-user-level="20"]) {
+article.message:has(.author *[data-user-level="20"]),
+article.message:has(.author *[data-user-level="30"]),
+article.message:has(.author *[data-user-level="31"]),
+#forum-topics-table tr:has(.creator-column .user-member),
+#forum-topics-table tr:has(.creator-column .user-gold),
+#forum-topics-table tr:has(.creator-column .user-platinum),
+.post-notice-deleted p {
     display:none !important;
+}
+
+.post-preview:not(${css_ok_uploader_selector}) {
+   background:linear-gradient(#555555,#999999);
+   border:1px solid grey;
+   box-sizing:border-box;
+   border-radius:5px;
+   pointer-events:none;
+}
+
+.post-preview:not(${css_ok_uploader_selector}) img {
+   opacity:0;
+}
+
+.post-preview:has(.post-unvote-link) {
+   background:none;
+   border:0;
+   border-radius:0;
+   pointer-events:all;
+}
+
+.post-preview:has(.post-unvote-link) img {
+   opacity:1;
 }
 
         `);
